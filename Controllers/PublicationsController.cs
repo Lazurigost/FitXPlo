@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TODO_LIST.Data.Models;
+using TODO_LIST.DTO;
 using todolist_api.Data;
 using todolist_api.Data.Models;
 
@@ -97,17 +100,48 @@ namespace todolist_api.Controllers
         // POST: api/Publication
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<PublicationModel>> PostPublicationModel(PublicationModel publicationModel)
+        public async Task<ActionResult<PublicationModel>> PostPublicationModel(PublicationDTO publicationModel)
         {
           if (_context.Publications == null)
           {
               return Problem("Entity set 'DataContext.Publications'  is null.");
           }
-            publicationModel.Term = DateTime.Now.AddHours(5);
-            _context.Publications.Add(publicationModel);
+            var currentUser = await _context.Users.FindAsync(publicationModel.UserId);
+            if (currentUser != null)
+            {
+                var newPublication = new PublicationModel
+                {
+                    UserId = publicationModel.UserId,
+                    User = await _context.Users.FindAsync(publicationModel.UserId),
+                    Name = publicationModel.Name,
+                    Description = publicationModel.Description,
+                    Term = DateTime.UtcNow.AddHours(5),
+                    Priority = publicationModel.Priority,
+                    IsDone = publicationModel.IsDone,
+                    PublicationMedia = publicationModel.PublicationMedia
+                };
+                _context.Publications.Add(newPublication);
+            }
+            else
+            {
+                var newPublication = new PublicationModel
+                {
+                    UserId = publicationModel.UserId,
+                    User = new UserModel { Id = 1, PasswordHash = "test", Role = new RoleModel { Id = 3, RoleName = "test"}, RoleId = 3, UserMedia = null, Username = "test"  },
+                    Name = publicationModel.Name,
+                    Description = publicationModel.Description,
+                    Term = DateTime.UtcNow.AddHours(5),
+                    Priority = publicationModel.Priority,
+                    IsDone = publicationModel.IsDone,
+                    PublicationMedia = publicationModel.PublicationMedia
+                };
+                _context.Publications.Add(newPublication);
+            }
+            
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPublicationModel", new { id = publicationModel.Id }, publicationModel);
+            //return CreatedAtAction("GetPublicationModel", new { id = publicationModel.Id }, publicationModel);
+            return Ok();
         }
         //[HttpPost]
         //public async Task<ActionResult<FavoriteModel>> PostFavoriteModel(FavoriteModel favoriteModel)

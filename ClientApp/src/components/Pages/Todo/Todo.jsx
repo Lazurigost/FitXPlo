@@ -9,6 +9,7 @@ import "moment/locale/ru";
 import "../Todo/static/css/Todo.css";
 import { getPublications } from "./FetchData/GetPublications";
 import PublicationItem from "./PublicationItem";
+import NonEditablePublicationItem from "./NonEditablePublicationItem";
 
 const { Content, Header, Sider } = Layout;
 const names = ["Популярное", "Избранное", "Подписки"]
@@ -23,7 +24,8 @@ const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, i
     };
 });
 const Todo = () => {
-  const [allPublication, setPublication] = useState([]);
+    const [allPublication, setPublication] = useState([]);
+    const [userPublication, setUserPublication] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
   const [spinning, setSpinning] = React.useState(false);
@@ -33,8 +35,8 @@ const Todo = () => {
   const getPublicationsAll = async () => {
     setSpinning(true);
     const posts = await getPublications();
-    setPublication(posts);
-    setSpinning(false);
+      setPublication(posts);
+      setSpinning(false);
     return posts;
   };
   const addPublication = async () => {
@@ -82,7 +84,7 @@ const Todo = () => {
       headers: headers,
     };
     await fetch(url + `/${id}`, options);
-    setPublication(allPublication.filter((x) => x.id !== id));
+    setPublication(allPublication);
   };
 
   const updatePublication = async (id, oldPublication) => {
@@ -110,19 +112,18 @@ const Todo = () => {
       getPublicationsAll();
     } else {
       setPublication([]);
-    }
-    if (localStorage.getItem("userrole") == 1) {
-        setIsAdmin(true);
       }
+      
+          if (localStorage.getItem("userrole") == 2) {
+              await setIsAdmin(true);
+          }
+      
       console.log(isAdmin);
       console.log(localStorage.getItem("userrole"))
   }, [isLoggedIn], [isAdmin]);
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-    let nameRole;
-    if (localStorage.getItem("userrole") == 1) { nameRole = "Пользователь" }
-    else { nameRole = "Администратор" }
     return (
 
     <Layout>
@@ -164,7 +165,8 @@ const Todo = () => {
                                             items={items2}
                                         />
                                     </Sider>
-                                    {isAdmin ? <Content className="content">
+                                    {isAdmin ?
+                                        <Content className="content">
                                         <div>
                                             {allPublication.map((x) => (
 
@@ -176,9 +178,21 @@ const Todo = () => {
                                                     setPublication={setPublication}
                                                 ></PublicationItem>
                                             ))}
-                                        </div>
+                                            </div>
+                                        </Content>
+                                        :
+                                        <Content className="content">
+                                            <div>
+                                                {allPublication.map((x) => (
 
-                                    </Content> : <div>Stuff</div>}
+                                                    <NonEditablePublicationItem
+                                                        publication={x}
+
+                                                        setPublication={setPublication}
+                                                    ></NonEditablePublicationItem>
+                                                ))}
+                                            </div>
+                                        </Content>}
                                     
                                 </Layout>
                                 

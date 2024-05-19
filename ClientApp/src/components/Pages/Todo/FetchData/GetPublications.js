@@ -10,7 +10,6 @@ export const getPublications = async () => {
 
   if (result.ok) {
     const posts = await result.json();
-      
     return posts
         .sort((a, b) => (a.id > b.id ? 1 : -1));
   }

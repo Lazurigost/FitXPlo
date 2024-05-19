@@ -18,6 +18,7 @@ export const getUser = async (token) => {
     const username = user.username;
       const userid = user.id;
       const userrole = user.roleId;
+      localStorage.setItem("wholeuser", user);
     localStorage.setItem("user", username);
       localStorage.setItem("userid", userid);
       localStorage.setItem("userrole", userrole);

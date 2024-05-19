@@ -71,7 +71,7 @@ const AddPublicationModal = ({ addPublication, setPublication }) => {
               ]}
             >
               <Input id="name" placeholder="Название"></Input>
-            </Form.Item>
+                      </Form.Item>
             <Form.Item
               label="Содержимое"
               rules={[
