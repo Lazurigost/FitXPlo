@@ -4,16 +4,16 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using FitXPlo.Data;
+using FitXPlo.Data.Models;
+using FitXPlo.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TODO_LIST.Data.Models;
-using TODO_LIST.DTO;
-using todolist_api.Data;
-using todolist_api.Data.Models;
+using FitXPlo.Data.Models;
 
-namespace todolist_api.Controllers
+namespace FitXPlo.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
@@ -28,14 +28,14 @@ namespace todolist_api.Controllers
         }
 
         // GET: api/Publication
-        
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PublicationModel>>> GetPublications()
         {
-          if (_context.Publications == null)
-          {
-              return NotFound();
-          }
+            if (_context.Publications == null)
+            {
+                return NotFound();
+            }
             return await _context.Publications.ToListAsync();
         }
         [HttpGet("{id}")]
@@ -64,10 +64,10 @@ namespace todolist_api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PublicationModel>> GetPublicationModel(int id)
         {
-          if (_context.Publications == null)
-          {
-              return NotFound();
-          }
+            if (_context.Publications == null)
+            {
+                return NotFound();
+            }
             var publicationModel = await _context.Publications.FindAsync(id);
 
             if (publicationModel == null)
@@ -114,10 +114,10 @@ namespace todolist_api.Controllers
         [HttpPost]
         public async Task<ActionResult<PublicationModel>> PostPublicationModel(PublicationDTO publicationModel)
         {
-          if (_context.Publications == null)
-          {
-              return Problem("Entity set 'DataContext.Publications'  is null.");
-          }
+            if (_context.Publications == null)
+            {
+                return Problem("Entity set 'DataContext.Publications'  is null.");
+            }
             var currentUser = await _context.Users.FindAsync(publicationModel.UserId);
             if (currentUser != null)
             {
@@ -140,7 +140,7 @@ namespace todolist_api.Controllers
                 var newPublication = new PublicationModel
                 {
                     UserId = publicationModel.UserId,
-                    User = new UserModel { Id = 1, PasswordHash = "test", Role = new RoleModel { Id = 3, RoleName = "test"}, RoleId = 3, UserMedia = null, Username = "test"  },
+                    User = new UserModel { Id = 1, PasswordHash = "test", Role = new RoleModel { Id = 3, RoleName = "test" }, RoleId = 3, UserMedia = null, Username = "test" },
                     Name = publicationModel.Name,
                     Description = publicationModel.Description,
                     Term = DateTime.UtcNow.AddHours(5),
@@ -150,7 +150,7 @@ namespace todolist_api.Controllers
                 };
                 _context.Publications.Add(newPublication);
             }
-            
+
             await _context.SaveChangesAsync();
 
             //return CreatedAtAction("GetPublicationModel", new { id = publicationModel.Id }, publicationModel);

@@ -1,6 +1,4 @@
-﻿using TODO_LIST.Data.Models;
-
-namespace todolist_api.Data.Models
+﻿namespace FitXPlo.Data.Models
 {
     public class UserModel
     {

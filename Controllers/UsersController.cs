@@ -6,16 +6,16 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using FitXPlo.Data;
+using FitXPlo.Data.Models;
+using FitXPlo.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using TODO_LIST.DTO;
-using todolist_api.Data;
-using todolist_api.Data.Models;
 
-namespace todolist_api.Controllers
+namespace FitXPlo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -35,9 +35,9 @@ namespace todolist_api.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserModel>> Registration(RegUserDTO userModel)
         {
-            
+
             //userModel.Role = await _context.Roles.FindAsync(userModel.RoleId);
-            userModel.Password= BCrypt.Net.BCrypt.HashPassword(userModel.Password);
+            userModel.Password = BCrypt.Net.BCrypt.HashPassword(userModel.Password);
             var newUser = new UserModel
             {
                 PasswordHash = userModel.Password,
@@ -100,7 +100,7 @@ namespace todolist_api.Controllers
             {
                 new Claim("ID", user.Id.ToString()), new Claim("ROLES", user.RoleId.ToString())
             };
-           
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("JwtSettings:Key").Value!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

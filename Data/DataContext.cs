@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FitXPlo.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Drawing.Drawing2D;
-using TODO_LIST.Data.Models;
-using todolist_api.Data.Models;
 
-namespace todolist_api.Data
+namespace FitXPlo.Data
 {
     public class DataContext : DbContext
     {

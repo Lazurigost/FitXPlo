@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using todolist_api.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using FitXPlo.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration config = builder.Configuration;

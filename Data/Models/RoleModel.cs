@@ -1,4 +1,4 @@
-﻿namespace TODO_LIST.Data.Models
+﻿namespace FitXPlo.Data.Models
 {
     public class RoleModel
     {

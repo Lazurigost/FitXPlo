@@ -1,4 +1,4 @@
-﻿namespace TODO_LIST.DTO
+﻿namespace FitXPlo.DTO
 {
     public class UserDTO
     {

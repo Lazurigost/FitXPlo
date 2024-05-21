@@ -10,7 +10,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Todo />} />
-            <Route path="/profile" element={<Todo />} />
+                      <Route path="/profile" element={<Todo />} />
           </Routes>
         </Router>
       </header>

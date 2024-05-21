@@ -1,10 +1,10 @@
-﻿using todolist_api.Data.Models;
+﻿using FitXPlo.Data.Models;
 
-namespace TODO_LIST.DTO
+namespace FitXPlo.DTO
 {
     public class PublicationDTO
     {
-        
+
         public int UserId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

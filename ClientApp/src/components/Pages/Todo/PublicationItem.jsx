@@ -9,8 +9,9 @@ import UpdatePublicationModal from "./Modals/UpdatePublicationModal";
 import { getColorPublication } from "./Helpers/OptionsPriority";
 import DeleteModal from "./Modals/DeletePublicationModal";
 import { getPublications } from "./FetchData/GetPublications";
+import { getFavorites } from "./FetchData/GetFavorites";
 
-const PublicationItem =  ({ publication, deleteAction, updateAction }) => {
+const PublicationItem =  ({ publication, deleteAction, updateAction, favoritable }) => {
   const colorPublication = getColorPublication(publication.priority);
 
   const [checked, setChecked] = useState(publication.isDone);
