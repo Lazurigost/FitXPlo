@@ -83,18 +83,18 @@ const AddPublicationModal = ({ addPublication, setPublication }) => {
             >
               <TextArea id="description" rows={4} placeholder="Содержимое" />
             </Form.Item>
-            <Form.Item
-              label="Срок публикации"
-              name="term"
-              rules={[
-                {
-                  required: true,
-                  message: "Выберите срок публикации",
-                },
-              ]}
-            >
-              <DatePicker id="term" placeholder="Выберите срок"></DatePicker>
-            </Form.Item>
+            {/*<Form.Item*/}
+            {/*  label="Срок публикации"*/}
+            {/*  name="term"*/}
+            {/*  rules={[*/}
+            {/*    {*/}
+            {/*      required: true,*/}
+            {/*      message: "Выберите срок публикации",*/}
+            {/*    },*/}
+            {/*  ]}*/}
+            {/*>*/}
+            {/*  <DatePicker id="term" placeholder="Выберите срок"></DatePicker>*/}
+            {/*</Form.Item>*/}
             <Form.Item
               label="Категория"
               name="priority"

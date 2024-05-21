@@ -10,6 +10,7 @@ import "../Todo/static/css/Todo.css";
 import { getPublications } from "./FetchData/GetPublications";
 import PublicationItem from "./PublicationItem";
 import NonEditablePublicationItem from "./NonEditablePublicationItem";
+import { getFavorites } from "./FetchData/GetFavorites"
 
 const { Content, Header, Sider } = Layout;
 const names = ["Популярное", "Избранное", "Подписки"]
@@ -25,7 +26,6 @@ const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, i
 });
 const Todo = () => {
     const [allPublication, setPublication] = useState([]);
-    const [userPublication, setUserPublication] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
   const [spinning, setSpinning] = React.useState(false);
@@ -38,11 +38,11 @@ const Todo = () => {
       setPublication(posts);
       setSpinning(false);
     return posts;
-  };
+    };
   const addPublication = async () => {
     const namePublication = document.querySelector("#name").value;
     const descriptionPublication = document.querySelector("#description").value;
-    const termPublication = document.querySelector("#term").value;
+    const termPublication = Date.UTC;
     const priorityPublication = document.querySelector("#priority").value;
 
     const newPublication = {
@@ -113,10 +113,15 @@ const Todo = () => {
     } else {
       setPublication([]);
       }
-      
+      const asyncAdmin = async () => {
           if (localStorage.getItem("userrole") == 2) {
               await setIsAdmin(true);
           }
+          else {
+              await setIsAdmin(false);
+          }
+      }
+      asyncAdmin();
       
       console.log(isAdmin);
       console.log(localStorage.getItem("userrole"))
@@ -168,15 +173,16 @@ const Todo = () => {
                                     {isAdmin ?
                                         <Content className="content">
                                         <div>
-                                            {allPublication.map((x) => (
-
+                                            { allPublication.map((x) => (
+                                                
                                                 <PublicationItem
                                                     publication={x}
 
                                                     deleteAction={() => deletePublication(x.id)}
                                                     updateAction={() => updatePublication(x.id, x)}
                                                     setPublication={setPublication}
-                                                ></PublicationItem>
+                                                    ></PublicationItem>
+                                                
                                             ))}
                                             </div>
                                         </Content>
@@ -184,14 +190,24 @@ const Todo = () => {
                                         <Content className="content">
                                             <div>
                                                 {allPublication.map((x) => (
+                                                    x.userId == localStorage.getItem("userid") ?
+                                                        <PublicationItem
+                                                            publication={x}
 
-                                                    <NonEditablePublicationItem
-                                                        publication={x}
+                                                            deleteAction={() => deletePublication(x.id)}
+                                                            updateAction={() => updatePublication(x.id, x)}
+                                                            setPublication={setPublication}
+                                                        ></PublicationItem>
+                                                        : 
+                                                        <NonEditablePublicationItem
+                                                            publication={x}
 
-                                                        setPublication={setPublication}
-                                                    ></NonEditablePublicationItem>
+                                                            
+                                                            setPublication={setPublication}
+                                                        ></NonEditablePublicationItem>
                                                 ))}
                                             </div>
+                                            
                                         </Content>}
                                     
                                 </Layout>

@@ -47,6 +47,18 @@ namespace todolist_api.Controllers
             }
             return await _context.Publications.Where(p => p.UserId == id).ToListAsync();
         }
+        [HttpGet("getFavortes/{id}")]
+        public async Task<ActionResult<IEnumerable<PublicationModel>>> GetFavorites(int id)
+        {
+            var FavList = await _context.Favorites.Where(f => f.UserId == id).ToListAsync();
+            var AllPubs = await _context.Publications.ToListAsync();
+            List<PublicationModel> FavedPublications = new List<PublicationModel>();
+            foreach (var fav in FavList)
+            {
+                FavedPublications.Add(AllPubs.Find(p => p.Id == fav.PublicationId));
+            }
+            return FavedPublications;
+        }
 
         // GET: api/Publication/5
         [HttpGet("{id}")]
@@ -114,6 +126,7 @@ namespace todolist_api.Controllers
                     UserId = publicationModel.UserId,
                     User = await _context.Users.FindAsync(publicationModel.UserId),
                     Name = publicationModel.Name,
+                    CreatorName = currentUser.Username,
                     Description = publicationModel.Description,
                     Term = DateTime.UtcNow.AddHours(5),
                     Priority = publicationModel.Priority,

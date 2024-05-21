@@ -42,7 +42,7 @@ const PublicationItem = ({ publication, deleteAction, updateAction }) => {
                 ></Meta>
               </Space>
               <h4 className="author-publication" style={{ fontSize: "50px" }}>
-                  Автор: {publication.userId}
+                  Автор: {publication.creatorName}
               </h4>
         <h4 className="title-publication" style={{ fontSize: "50px" }}>
           {publication.name}

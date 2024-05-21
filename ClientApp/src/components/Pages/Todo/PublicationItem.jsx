@@ -10,7 +10,7 @@ import { getColorPublication } from "./Helpers/OptionsPriority";
 import DeleteModal from "./Modals/DeletePublicationModal";
 import { getPublications } from "./FetchData/GetPublications";
 
-const PublicationItem = ({ publication, deleteAction, updateAction }) => {
+const PublicationItem =  ({ publication, deleteAction, updateAction }) => {
   const colorPublication = getColorPublication(publication.priority);
 
   const [checked, setChecked] = useState(publication.isDone);
@@ -18,7 +18,7 @@ const PublicationItem = ({ publication, deleteAction, updateAction }) => {
   const publicationCopy = { ...publication };
 
   const labelCheckBox = checked ? "Избранное" : "Добавить в избранное";
-
+  
   return (
     <Card
       vertical
@@ -46,7 +46,7 @@ const PublicationItem = ({ publication, deleteAction, updateAction }) => {
         </h4>
         <p className="description-publication" style={{fontSize:"20px"}}>
             {publication.description}
-        </p>
+              </p>
         <Space wrap>
           
           <Card
