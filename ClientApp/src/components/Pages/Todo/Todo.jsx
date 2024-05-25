@@ -26,10 +26,31 @@ const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, i
 });
 const Todo = () => {
     const [allPublication, setPublication] = useState([]);
+    const [allFavs, setFavs] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-  const [spinning, setSpinning] = React.useState(false);
+    const [spinning, setSpinning] = React.useState(false);
+    const currentUser = localStorage.getItem("userid")
+    const [notInFav, setNotInFav] = useState(false)
+    //const [isNotLiked, setIsNotLike] = useState(false);
+
+    //const [favedPublication, setFavedPublication] = useState([]);
     
+    //const currentUser = localStorage.getItem("userid")
+    //const newurl = `/api/publications/getFavorites/` + currentUser;
+
+    //const getFavoritesAll = async () => {
+
+    //    await fetch(url + `/${id}`, options);
+    //    setSpinning(true);
+    //    const posts = await getFavorites();
+    //    setPublication(posts);
+    //    setSpinning(false);
+    //    return posts;
+    //};
+
+    //const cUser = localStorage.getItem("userid");
+
   const url = `/api/publications`;
 
   const getPublicationsAll = async () => {
@@ -43,8 +64,10 @@ const Todo = () => {
     const namePublication = document.querySelector("#name").value;
     const descriptionPublication = document.querySelector("#description").value;
     const termPublication = Date.UTC;
-    const priorityPublication = document.querySelector("#priority").value;
-
+      const priorityPublication = document.querySelector("#priority").value;
+      /*const mediaPublication = document.querySelector("#fileList").value;*/
+      const mediaPublication = null;
+      
     const newPublication = {
       userid: localStorage.getItem("userid"),
       name: namePublication,
@@ -52,7 +75,7 @@ const Todo = () => {
       term: new Date(termPublication),
       priority: priorityPublication,
         isdone: false,
-      publicationMedia: null
+      publicationMedia: mediaPublication
     };
 
     const headers = new Headers();
@@ -101,15 +124,38 @@ const Todo = () => {
     const index = allPublication.findIndex((x) => x.id === id);
     allPublication[index] = oldPublication;
     setPublication(allPublication.slice());
-  };
+    };
+    const likePublication = async (id, currentUser) => {
+        const headers = new Headers();
+        headers.set("Content-Type", "application/json");
+        headers.set("Authorization", "Bearer " + localStorage.getItem("token"));
+        const newPublication = {
+            userid: localStorage.getItem("userid"),
+            publicationId: id
+        };
+        const options = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(newPublication),
+        };
+        await fetch(url + `/like/${currentUser}/${id}`, options);
 
+        
+
+        
+        
+        const index = allPublication.findIndex((x) => x.id === id);
+        setPublication(allPublication.slice());
+        return [];
+    };
+    
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
     }
     if (isLoggedIn) {
-      getPublicationsAll();
+        getPublicationsAll();
     } else {
       setPublication([]);
       }
@@ -122,10 +168,18 @@ const Todo = () => {
           }
       }
       asyncAdmin();
-      
+      const getFavoritesAll = async () => {
+          setSpinning(true);
+          const favs = await getFavorites();
+          setFavs(favs);
+          setSpinning(false);
+          return favs;
+      };
+      getFavoritesAll();
       console.log(isAdmin);
       console.log(localStorage.getItem("userrole"))
   }, [isLoggedIn], [isAdmin]);
+  
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -181,6 +235,7 @@ const Todo = () => {
                                                     deleteAction={() => deletePublication(x.id)}
                                                     updateAction={() => updatePublication(x.id, x)}
                                                     setPublication={setPublication}
+                                                    
                                                     ></PublicationItem>
                                                 
                                             ))}
@@ -189,23 +244,55 @@ const Todo = () => {
                                         :
                                         <Content className="content">
                                             <div>
-                                                {allPublication.map((x) => (
-                                                    x.userId == localStorage.getItem("userid") ?
-                                                        <PublicationItem
-                                                            publication={x}
+                                                {allPublication.map((x) => {
+                                                    if (allFavs.some((f) => f.id == x.id)) {
+                                                        return (x.userId == localStorage.getItem("userid") ?
+                                                            <PublicationItem
+                                                                publication={x}
+                                                                isFavorite={true}
+                                                                favoritable={() => likePublication(x.id, currentUser)}
+                                                                deleteAction={() => deletePublication(x.id)}
+                                                                updateAction={() => updatePublication(x.id, x)}
+                                                                setPublication={setPublication}
+                                                            ></PublicationItem>
+                                                            :
+                                                            <NonEditablePublicationItem
+                                                                publication={x}
+                                                                isFavorite={true}
+                                                                favoritable={() => likePublication(x.id, currentUser)}
+                                                                deleteAction={() => deletePublication(x.id)}
+                                                                updateAction={() => updatePublication(x.id, x)}
+                                                                setPublication={setPublication}
+                                                            ></NonEditablePublicationItem>)
+                                                    }
+                                                    else {
+                                                        return (x.userId == localStorage.getItem("userid") ?
+                                                            <PublicationItem
+                                                                publication={x}
+                                                                isFavorite={false}
+                                                                favoritable={() => likePublication(x.id, currentUser)}
+                                                                deleteAction={() => deletePublication(x.id)}
+                                                                updateAction={() => updatePublication(x.id, x)}
+                                                                setPublication={setPublication}
+                                                            ></PublicationItem>
+                                                            :
+                                                            <NonEditablePublicationItem
+                                                                publication={x}
+                                                                isFavorite={false}
+                                                                favoritable={() => likePublication(x.id, currentUser)}
 
-                                                            deleteAction={() => deletePublication(x.id)}
-                                                            updateAction={() => updatePublication(x.id, x)}
-                                                            setPublication={setPublication}
-                                                        ></PublicationItem>
-                                                        : 
-                                                        <NonEditablePublicationItem
-                                                            publication={x}
-
-                                                            
-                                                            setPublication={setPublication}
-                                                        ></NonEditablePublicationItem>
-                                                ))}
+                                                                setPublication={setPublication}
+                                                            ></NonEditablePublicationItem>)
+                                                    }
+                                                    
+                                                }
+                                                    
+                                                    
+                                                        
+                                                    
+                                                    
+                                                
+                                                )}
                                             </div>
                                             
                                         </Content>}

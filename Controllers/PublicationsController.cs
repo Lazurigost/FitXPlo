@@ -47,7 +47,7 @@ namespace FitXPlo.Controllers
             }
             return await _context.Publications.Where(p => p.UserId == id).ToListAsync();
         }
-        [HttpGet("getFavortes/{id}")]
+        [HttpGet("getFavorites/{id}")]
         public async Task<ActionResult<IEnumerable<PublicationModel>>> GetFavorites(int id)
         {
             var FavList = await _context.Favorites.Where(f => f.UserId == id).ToListAsync();
@@ -58,6 +58,25 @@ namespace FitXPlo.Controllers
                 FavedPublications.Add(AllPubs.Find(p => p.Id == fav.PublicationId));
             }
             return FavedPublications;
+        }
+        [AllowAnonymous]
+        [HttpPost("like/{userid}/{publicationid}")]
+        public async Task<ActionResult<FavoriteModel>> PostFavoriteModel(int userid, int publicationid)
+        {
+            var newFav = new FavoriteModel
+            {
+                UserId = userid,
+                PublicationId = publicationid
+            };
+            var nullCheck = await _context.Favorites.Where(f => f.UserId == userid && f.PublicationId == publicationid).FirstOrDefaultAsync();
+           if ( nullCheck == null)
+            {
+                _context.Favorites.Add(newFav);
+                await _context.SaveChangesAsync();
+            }
+                
+            
+            return Ok();
         }
 
         // GET: api/Publication/5
@@ -76,7 +95,7 @@ namespace FitXPlo.Controllers
             }
 
             return publicationModel;
-        }
+        } 
 
         // PUT: api/Publication/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

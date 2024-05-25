@@ -1,5 +1,5 @@
 const currentUser = localStorage.getItem("userid")
-const url = `/api/getFavorites/{userid}`;
+const url = `/api/publications/getFavorites/` + currentUser;
 export const getFavorites = async () => {
     const headers = {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { Button, Form, Input, DatePicker, Cascader, Modal } from "antd";
 import { optionsPriority } from "../Helpers/OptionsPriority";
 import { getPublications } from "../FetchData/GetPublications";
+import { message, Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
+const { Dragger } = Upload;
 const { TextArea } = Input;
+
 
 const AddPublicationModal = ({ addPublication, setPublication }) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -13,7 +18,12 @@ const AddPublicationModal = ({ addPublication, setPublication }) => {
   const handleCancel = () => {
     setIsCreateModalOpen(false);
   };
-
+    const normFile = (e: any) => {
+        if (Array.isArray(e)) {
+            return e;
+        }
+        return e?.fileList;
+    };
   return (
     <>
       <Button
@@ -59,7 +69,15 @@ const AddPublicationModal = ({ addPublication, setPublication }) => {
               remember: true,
             }}
             autoComplete="off"
-          >
+                  >
+                      <Form.Item label="Upload" name="publicationMedia" valuePropName="fileList" getValueFromEvent={normFile}>
+                          <Upload action="/upload.do" listType="picture-card">
+                              <button style={{ border: 0, background: 'none' }} type="button">
+                                  <PlusOutlined />
+                                  <div style={{ marginTop: 8 }}>Upload</div>
+                              </button>
+                          </Upload>
+                      </Form.Item>
             <Form.Item
               label="Название"
               name="name"
